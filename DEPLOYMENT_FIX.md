@@ -5,17 +5,17 @@ Your GitHub Actions workflow stopped working after changes to templates and stat
 
 ## Root Causes Identified
 
-### 1. **Health Check Timing Issue**
+### 1. **Port 80 Already Allocated** ⚠️ MAIN ISSUE
+The EC2 instance has a container or service already using port 80. The workflow tries to stop the container named "flask" but if there's another container using port 80 (or the old container has a different name), it will fail.
+
+### 2. **Health Check Timing Issue**
 The original workflow runs `curl -f http://localhost/health` immediately after starting the container, which doesn't give the Flask app enough time to start up with gunicorn.
 
-### 2. **Missing Error Handling**
+### 3. **Missing Error Handling**
 If the health check fails, there's no logging or retry mechanism to diagnose the issue.
 
-### 3. **No Container Restart Policy**
+### 4. **No Container Restart Policy**
 The container doesn't have a restart policy, so if it crashes, it won't automatically recover.
-
-### 4. **Large Static Files**
-Your static files (especially main.js with Three.js code) are quite large, which might cause slower container startup times.
 
 ## Solution Applied
 
@@ -23,11 +23,12 @@ I've updated `.github/workflows/deploy.yml` with the following improvements:
 
 ### Changes Made:
 
-1. **Added Startup Wait Time**: 5-second delay before health checks
-2. **Retry Logic**: 10 attempts with 3-second intervals
-3. **Container Restart Policy**: `--restart unless-stopped`
-4. **Better Error Logging**: Shows container logs if health check fails
-5. **Container Status Check**: Verifies container is running before health check
+1. **Force Clean Port 80**: Finds and removes ANY container using port 80
+2. **Added Startup Wait Time**: 5-second delay before health checks
+3. **Retry Logic**: 10 attempts with 3-second intervals
+4. **Container Restart Policy**: `--restart unless-stopped`
+5. **Better Error Logging**: Shows container logs if health check fails
+6. **Container Status Check**: Verifies container is running before health check
 
 ## Testing Locally
 

@@ -27,8 +27,20 @@ jobs:
           key: ${{ secrets.EC2_KEY }}
           script: |
             docker pull rockingut/devops-flask:latest
-            docker stop flask || true
-            docker rm flask || true
+            
+            # Stop and remove any container named flask
+            docker stop flask 2>/dev/null || true
+            docker rm flask 2>/dev/null || true
+            
+            # Find and stop any container using port 80
+            CONTAINER_ON_80=$(docker ps -q --filter "publish=80")
+            if [ ! -z "$CONTAINER_ON_80" ]; then
+              echo "Found container using port 80: $CONTAINER_ON_80"
+              docker stop $CONTAINER_ON_80
+              docker rm $CONTAINER_ON_80
+            fi
+            
+            # Start the new container
             docker run -d --name flask -p 80:5000 --restart unless-stopped rockingut/devops-flask:latest
             echo "Waiting for container to start..."
             sleep 5
