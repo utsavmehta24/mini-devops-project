@@ -1,0 +1,165 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Utsav Mehta — CI/CD Portfolio</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+  <div id="stage" class="stage">
+    <!-- 3D background layer -->
+    <div class="bg-mesh" aria-hidden="true"></div>
+
+    <header class="header reveal" data-reveal>
+      <div class="header-inner card-3d" data-tilt>
+        <div class="header-content">
+          <h1>
+            <span class="gradient-text">Utsav Mehta</span>
+            <span class="badge widget-3d" data-tilt>DevOps Engineer</span>
+          </h1>
+          <p class="subtitle">Building automated pipelines that transform code into production-ready applications</p>
+          <nav class="nav-3d">
+            <a href="https://github.com/utsavmehta24" target="_blank" class="nav-link widget-3d" data-tilt>
+              <span class="nav-link-inner">GitHub</span>
+            </a>
+            <a href="https://utsavmehta24.github.io/utsavmehta/" target="_blank" class="nav-link widget-3d" data-tilt>
+              <span class="nav-link-inner">Portfolio</span>
+            </a>
+          </nav>
+        </div>
+      </div>
+    </header>
+
+    <main>
+      <section id="hero" class="section-hero reveal" data-reveal>
+        <div class="hero-inner">
+          <div class="hero-title-wrap widget-3d" data-tilt>
+            <h2 class="hero-title">The Code Factory</h2>
+            <p class="hero-desc">Watch your code journey through an automated production line — from commit to deployment</p>
+          </div>
+          <div class="hero-scroll-hint">
+            <span class="scroll-dot"></span>
+            <span>Explore below</span>
+          </div>
+        </div>
+      </section>
+
+      <section id="visual" class="section-visual reveal" data-reveal>
+        <div class="visual-layout">
+          <div id="canvas-wrapper" class="canvas-wrapper card-3d" data-tilt>
+            <div id="canvas-container">
+              <canvas id="three-canvas"></canvas>
+              <div id="hud">
+                <div class="hud-left">
+                  <div class="status-indicator widget-3d" data-tilt>
+                    <span class="status-dot"></span>
+                    <span class="status-text">Pipeline Active</span>
+                  </div>
+                  <div class="hint">Drag to rotate · Click stations · Scroll to zoom</div>
+                </div>
+                <div class="hud-right">
+                  <button id="toggle-panel" class="icon-btn widget-3d" type="button" aria-controls="info-panel" aria-expanded="true" data-tilt>
+                    <span>Details</span>
+                  </button>
+                  <button id="reset-view" class="icon-btn widget-3d" type="button" data-tilt>
+                    <span>Reset</span>
+                  </button>
+                </div>
+              </div>
+              <div id="tooltip" role="status" aria-live="polite"></div>
+              <div id="loading-overlay">
+                <div class="spinner"></div>
+                <p>Initializing factory...</p>
+              </div>
+            </div>
+          </div>
+
+          <aside id="info-panel" class="info-panel card-3d" data-tilt>
+            <div class="panel-header">
+              <h2 id="panel-title">CI/CD Pipeline</h2>
+              <p id="panel-body">Select a station to learn about each stage of the production line.</p>
+            </div>
+            <div class="panel-content">
+              <div class="section">
+                <h3><span class="section-icon">⚙️</span> What I Built</h3>
+                <ul id="what-list"></ul>
+              </div>
+              <div class="section">
+                <h3><span class="section-icon">💡</span> Why It Matters</h3>
+                <ul id="why-list"></ul>
+              </div>
+              <div class="section">
+                <h3><span class="section-icon">🚀</span> How It Works</h3>
+                <ol id="how-list"></ol>
+              </div>
+              <div class="section">
+                <h3><span class="section-icon">🔮</span> Future Vision</h3>
+                <ul id="future-list"></ul>
+              </div>
+            </div>
+          </aside>
+        </div>
+      </section>
+
+      <section id="details" class="section-details reveal" data-reveal>
+        <h2 class="section-heading">How This Stacks Up</h2>
+        <div class="details-grid">
+          <article class="detail-card card-3d" data-tilt data-reveal-item>
+            <div class="card-face">
+              <div class="card-icon">🏥</div>
+              <h3>Health Check</h3>
+              <p>Endpoint <code>/health</code> returns <code>OK</code>. CI uses it to verify deployment status.</p>
+            </div>
+          </article>
+          <article class="detail-card card-3d" data-tilt data-reveal-item>
+            <div class="card-face">
+              <div class="card-icon">🔄</div>
+              <h3>Automated Flow</h3>
+              <p>Every push runs the pipeline: <strong>Code → Build → Test → Deploy</strong>. See it in 3D above.</p>
+            </div>
+          </article>
+          <article class="detail-card card-3d" data-tilt data-reveal-item>
+            <div class="card-face">
+              <div class="card-icon">🐳</div>
+              <h3>Containerized</h3>
+              <p>Dockerized for consistency. One image, runs anywhere — dev, staging, or production.</p>
+            </div>
+          </article>
+          <article class="detail-card card-3d" data-tilt data-reveal-item>
+            <div class="card-face">
+              <div class="card-icon">☁️</div>
+              <h3>Cloud Ready</h3>
+              <p>Deployed via GitHub Actions to AWS EC2. Zero manual steps after you push.</p>
+            </div>
+          </article>
+        </div>
+      </section>
+
+      <section id="tech" class="section-tech reveal" data-reveal>
+        <h2 class="section-heading">Tech in Action</h2>
+        <div class="tech-stack">
+          <span class="tech-pill widget-3d" data-tilt>Flask</span>
+          <span class="tech-pill widget-3d" data-tilt>Three.js</span>
+          <span class="tech-pill widget-3d" data-tilt>Docker</span>
+          <span class="tech-pill widget-3d" data-tilt>GitHub Actions</span>
+          <span class="tech-pill widget-3d" data-tilt>AWS EC2</span>
+        </div>
+      </section>
+    </main>
+
+    <footer class="footer reveal" data-reveal>
+      <div class="footer-inner card-3d" data-tilt>
+        <p>Built with <strong>Flask</strong> + <strong>Three.js</strong> — Modern CI/CD in action</p>
+        <p class="footer-meta">Auto-deployed with GitHub Actions · Docker · AWS EC2</p>
+      </div>
+    </footer>
+  </div>
+
+  <script src="https://unpkg.com/three@0.152.2/build/three.min.js"></script>
+  <script src="{{ url_for('static', filename='main.js') }}"></script>
+</body>
+</html>
