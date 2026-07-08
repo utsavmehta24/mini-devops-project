@@ -20,7 +20,7 @@ jobs:
           docker build -t rockingut/devops-flask:latest .
           docker push rockingut/devops-flask:latest
       - name: Deploy on EC2 via SSH
-        uses: appleboy/ssh-action@v1.0.3
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ubuntu
