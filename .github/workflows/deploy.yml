@@ -42,19 +42,45 @@ jobs:
             
             # Start the new container
             docker run -d --name flask -p 80:5000 --restart unless-stopped rockingut/devops-flask:latest
+            
+            # Wait for container to be fully running
             echo "Waiting for container to start..."
-            sleep 5
-            echo "Checking container status..."
-            docker ps | grep flask
-            echo "Testing health endpoint..."
-            for i in {1..10}; do
-              if curl -f http://localhost/health; then
-                echo "Health check passed!"
+            sleep 3
+            
+            # Check if container is running
+            if ! docker ps | grep -q flask; then
+              echo "ERROR: Container failed to start"
+              docker logs flask
+              exit 1
+            fi
+            
+            echo "Container is running. Checking health endpoint..."
+            
+            # Health check with more retries and better error handling
+            MAX_RETRIES=15
+            RETRY_DELAY=3
+            
+            for i in $(seq 1 $MAX_RETRIES); do
+              echo "Health check attempt $i/$MAX_RETRIES..."
+              
+              # Use curl with better error handling
+              if curl -f -s -o /dev/null -w "%{http_code}" http://localhost/health | grep -q "200"; then
+                echo "✓ Health check passed!"
+                echo "Deployment successful!"
+                docker ps | grep flask
                 exit 0
               fi
-              echo "Attempt $i failed, retrying in 3 seconds..."
-              sleep 3
+              
+              if [ $i -lt $MAX_RETRIES ]; then
+                echo "  Health check failed, retrying in ${RETRY_DELAY}s..."
+                sleep $RETRY_DELAY
+              fi
             done
-            echo "Health check failed after 10 attempts"
+            
+            # If we get here, health checks failed
+            echo "✗ Health check failed after $MAX_RETRIES attempts"
+            echo "Container logs:"
             docker logs flask
+            echo "Container status:"
+            docker ps -a | grep flask
             exit 1
