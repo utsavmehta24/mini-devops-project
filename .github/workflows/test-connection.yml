@@ -1,0 +1,40 @@
+name: Test EC2 Connection
+
+on:
+  workflow_dispatch:  # Manual trigger only
+
+jobs:
+  test-connection:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Test EC2 Reachability
+        run: |
+          echo "Testing connection to EC2 instance..."
+          echo "EC2 Host: ${{ secrets.EC2_HOST }}"
+          
+          # Test if host is reachable
+          if ping -c 3 ${{ secrets.EC2_HOST }}; then
+            echo "✓ Host is reachable via ping"
+          else
+            echo "✗ Host is NOT reachable via ping"
+          fi
+          
+          # Test SSH port
+          echo "Testing SSH port 22..."
+          if timeout 10 bash -c "cat < /dev/null > /dev/tcp/${{ secrets.EC2_HOST }}/22"; then
+            echo "✓ SSH port 22 is open"
+          else
+            echo "✗ SSH port 22 is NOT accessible (timeout or closed)"
+            exit 1
+          fi
+      
+      - name: Test SSH Connection
+        run: |
+          echo "Creating SSH key file..."
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_KEY }}" > ~/.ssh/ec2_key
+          chmod 600 ~/.ssh/ec2_key
+          
+          echo "Testing SSH connection..."
+          ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 -i ~/.ssh/ec2_key ubuntu@${{ secrets.EC2_HOST }} "echo '✓ SSH connection successful' && uname -a"
