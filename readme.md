@@ -124,15 +124,9 @@ OK
 
 ---
 
-## 📌 Resume-Ready Highlights
+## 📌 Highlights
 
 * Deployed Dockerized Flask app on AWS EC2 (Free Tier)
 * Built CI/CD pipeline using GitHub Actions for automated build & deploy
 * Implemented health checks and manual rollback using versioned images
 * Secured credentials with GitHub Secrets and SSH-based deployment
-
----
-
-## 📝 License
-
-MIT
